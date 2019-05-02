@@ -126,4 +126,52 @@ test(
 	}
 );
 
+test(
+	'babel-plugin-func-wrap: existing named export function',
+	`export default function foo() {}; foo.more = null`,
+	`export default function () {\n  function foo() {}\n\n  ;\n  foo.more = null;\n  return foo;\n}`
+);
+
+test(
+	'babel-plugin-func-wrap: existing unnamed export function',
+	`export default function () {}; const more = null`,
+	`export default function () {\n  function _default() {}\n\n  ;\n  const more = null;\n  return _default;\n}`
+);
+
+test(
+	'babel-plugin-func-wrap: existing unnamed export function (unique id test)',
+	`export default function () { return _default }; const more = null`,
+	`export default function () {\n  function _default2() {\n    return _default;\n  }\n\n  ;\n  const more = null;\n  return _default2;\n}`
+);
+
+test(
+	'babel-plugin-func-wrap: existing named export class',
+	`export default class Foo {}; Foo.more = null`,
+	`export default function () {\n  class Foo {}\n\n  ;\n  Foo.more = null;\n  return Foo;\n}`
+);
+
+test(
+	'babel-plugin-func-wrap: existing unnamed export class',
+	`export default class {}; const more = null`,
+	`export default function () {\n  class _default {}\n\n  ;\n  const more = null;\n  return _default;\n}`
+);
+
+test(
+	'babel-plugin-func-wrap: default export object',
+	`export default {}; const more = null`,
+	`export default function () {\n  const _default = {};\n  const more = null;\n  return _default;\n}`
+);
+
+test(
+	'babel-plugin-func-wrap: default export string',
+	`export default 'st'; const more = null`,
+	`export default function () {\n  const _default = 'st';\n  const more = null;\n  return _default;\n}`
+);
+
+test(
+	'babel-plugin-func-wrap: default export variable',
+	`export default _default; const more = null`,
+	`export default function () {\n  const _default2 = _default;\n  const more = null;\n  return _default2;\n}`
+);
+
 process.exit(0);
